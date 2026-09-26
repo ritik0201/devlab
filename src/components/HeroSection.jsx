@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import confetti from 'canvas-confetti';
 import { 
   ArrowRight, 
   CheckCircle2, 
@@ -91,6 +92,16 @@ export default function HeroSection({ onOpenAssessment, onOpenPractice, onOpenIn
     setTimeout(() => {
       setIsRunning(false);
       setTestPassed(true);
+      try {
+        confetti({
+          particleCount: 90,
+          spread: 70,
+          origin: { y: 0.6 },
+          colors: ['#6366f1', '#10b981', '#06b6d4', '#8b5cf6', '#3b82f6', '#f59e0b']
+        });
+      } catch (e) {
+        // Fallback catch if canvas confetti is blocked
+      }
       setTimeout(() => setTestPassed(false), 3500);
     }, 900);
   };
