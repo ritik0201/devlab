@@ -20,6 +20,7 @@ export default function HeroSection({ onOpenAssessment, onOpenPractice, onOpenIn
 
   const codeSnippets = {
     java: {
+      label: 'Java',
       filename: 'ConcurrentCache.java',
       lang: 'Java 21',
       badge: 'JVM Lock Fix',
@@ -35,9 +36,10 @@ export default function HeroSection({ onOpenAssessment, onOpenPractice, onOpenIn
       ]
     },
     go: {
+      label: 'Go',
       filename: 'pool_worker.go',
       lang: 'Go 1.22',
-      badge: 'Leak Fix',
+      badge: 'Goroutine Leak',
       code: [
         { num: 1, text: 'func WorkerPool(ctx context.Context, jobs <-chan Job) {', type: 'normal' },
         { num: 2, text: '    for {', type: 'normal' },
@@ -50,6 +52,7 @@ export default function HeroSection({ onOpenAssessment, onOpenPractice, onOpenIn
       ]
     },
     sql: {
+      label: 'SQL',
       filename: 'indexing_query.sql',
       lang: 'PostgreSQL 16',
       badge: 'Index Scan',
@@ -65,6 +68,7 @@ export default function HeroSection({ onOpenAssessment, onOpenPractice, onOpenIn
       ]
     },
     python: {
+      label: 'Python',
       filename: 'distributed_lock.py',
       lang: 'Python 3.12',
       badge: 'Redis Redlock',
@@ -182,36 +186,36 @@ export default function HeroSection({ onOpenAssessment, onOpenPractice, onOpenIn
           </div>
 
           {/* RIGHT: Fixed-Height Symmetrical Code Preview Window */}
-          <div className="lg:col-span-6 w-full flex items-center">
+          <div className="lg:col-span-6 w-full flex items-center min-w-0">
             <div className="w-full h-[470px] min-h-[470px] max-h-[470px] rounded-2xl bg-[#0e1017] border border-white/10 shadow-2xl overflow-hidden flex flex-col justify-between">
               
-              {/* Window Header Bar (Fixed Height: 52px) */}
-              <div className="h-[52px] shrink-0 px-4 bg-[#131520] border-b border-white/10 flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
+              {/* Window Header Bar (Fixed Height: 52px, Overflow Proof) */}
+              <div className="h-[52px] shrink-0 px-3.5 sm:px-4 bg-[#131520] border-b border-white/10 flex items-center justify-between gap-2 min-w-0 overflow-hidden">
+                <div className="flex items-center gap-2 shrink-0">
                   <div className="flex items-center gap-1.5">
                     <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
                     <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
                     <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
                   </div>
-                  <span className="text-xs font-mono text-slate-400 ml-2 hidden sm:flex items-center gap-1.5">
+                  <span className="text-xs font-mono text-slate-400 ml-1.5 hidden sm:flex items-center gap-1.5 shrink-0">
                     <Cpu className="w-3.5 h-3.5 text-indigo-400" />
                     sandbox-vm-01
                   </span>
                 </div>
 
-                {/* Tabs */}
-                <div className="flex items-center gap-1 bg-[#090a0f] p-1 rounded-lg border border-white/5">
+                {/* Compact Language Tabs */}
+                <div className="flex items-center gap-1 bg-[#090a0f] p-1 rounded-lg border border-white/5 shrink-0">
                   {Object.keys(codeSnippets).map((key) => (
                     <button
                       key={key}
                       onClick={() => setActiveTab(key)}
-                      className={`px-2.5 py-1 rounded font-mono text-xs transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 rounded font-mono text-xs transition-all cursor-pointer whitespace-nowrap ${
                         activeTab === key
                           ? 'bg-indigo-600 text-white font-medium shadow-sm'
                           : 'text-slate-400 hover:text-slate-200'
                       }`}
                     >
-                      {codeSnippets[key].filename.split('.')[0]}
+                      {codeSnippets[key].label}
                     </button>
                   ))}
                 </div>
@@ -220,12 +224,12 @@ export default function HeroSection({ onOpenAssessment, onOpenPractice, onOpenIn
                 <button
                   onClick={handleSimulate}
                   disabled={isRunning}
-                  className={`px-3 py-1 rounded font-mono text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer ${
+                  className={`px-3 py-1 rounded font-mono text-xs font-medium flex items-center gap-1.5 transition-all cursor-pointer shrink-0 ${
                     testPassed
                       ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
                       : isRunning
                       ? 'bg-indigo-600/50 text-indigo-200'
-                      : 'bg-indigo-600 hover:bg-indigo-500 text-white'
+                      : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-sm'
                   }`}
                 >
                   {isRunning ? (
@@ -239,19 +243,26 @@ export default function HeroSection({ onOpenAssessment, onOpenPractice, onOpenIn
                 </button>
               </div>
 
-              {/* Code Snippet Area (Flex-1, Fixed Scrollable Body Height) */}
+              {/* Code Snippet Area */}
               <div className="flex-1 p-4 sm:p-5 font-mono text-xs bg-[#0b0c12] text-slate-300 flex flex-col justify-between overflow-hidden">
                 <div>
-                  <div className="flex items-center justify-between mb-3 text-slate-400 text-[11px] pb-2 border-b border-white/5">
-                    <span className="flex items-center gap-2 text-slate-200 font-semibold">
-                      <Code2 className="w-3.5 h-3.5 text-indigo-400" />
-                      {codeSnippets[activeTab].filename}
+                  {/* File Info Sub-header */}
+                  <div className="flex items-center justify-between mb-3 text-slate-400 text-[11px] pb-2 border-b border-white/5 min-w-0">
+                    <span className="flex items-center gap-2 text-slate-200 font-semibold truncate">
+                      <Code2 className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
+                      <span className="truncate">{codeSnippets[activeTab].filename}</span>
                     </span>
-                    <span className="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20">
-                      {codeSnippets[activeTab].lang}
-                    </span>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className="px-2 py-0.5 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 text-[10px] font-mono">
+                        {codeSnippets[activeTab].badge}
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-white/[0.04] text-slate-300 border border-white/10 text-[10px] font-mono">
+                        {codeSnippets[activeTab].lang}
+                      </span>
+                    </div>
                   </div>
 
+                  {/* Code Lines */}
                   <div className="space-y-1.5 leading-relaxed">
                     {codeSnippets[activeTab].code.map((line) => (
                       <div
@@ -271,7 +282,7 @@ export default function HeroSection({ onOpenAssessment, onOpenPractice, onOpenIn
                   </div>
                 </div>
 
-                {/* Subtle Status Notification Bar if Test Passed */}
+                {/* Status Notification Bar if Test Passed */}
                 {testPassed && (
                   <div className="mt-2 p-2 rounded bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between text-emerald-300 text-[11px] font-mono">
                     <span className="flex items-center gap-1.5">
@@ -307,4 +318,5 @@ export default function HeroSection({ onOpenAssessment, onOpenPractice, onOpenIn
     </section>
   );
 }
+
 
